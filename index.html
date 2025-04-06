@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Bug Smasher with Login</title>
+</head>
+<style>
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-image: url("oldestforest.jpeg");
+    background-attachment:fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-width: 450px;
+  }
+
+  img {
+    width: 20%;
+    min-width: 200px;
+  }
+  h1, h3, div {
+    color:whitesmoke;
+  }
+  #loginName, h1 {
+    font-size: 2.5rem;
+  }
+  text, p {
+    font-size: 2rem;
+  }
+ 
+  /*popup form for login - hidden by default */
+  .popup-form {
+    position: fixed;
+    top: 20vh;
+    left: 25%;
+    width: 50%;
+    padding: 5px;
+    z-index: 9;
+    background-color: rgba(250, 212, 218, 0.3);
+  }
+  #game-div {
+    display: none;
+    margin-left: 20px;
+    margin-right: 50px; 
+  }
+  #buttonClose {
+    border: none;
+    width: 60%;
+    padding: 8px 10px;
+    margin-bottom: 30px;
+    font-size: x-large;
+    background-color: rgb(107, 88, 79);
+    color: rgb(247, 247, 104);
+  }
+  #buttonRestart {
+    border: none;
+    width: 40%;
+    padding: 8px 10px;
+    margin-bottom: 30px;
+    font-size: x-large;
+    background-color: rgb(114, 89, 77);
+    color: rgb(247, 247, 104);
+  }
+  input[type=text] {
+    padding: 12px 20px;
+    width: 60%;
+  }
+  #label {
+    font-size: x-large;
+  }
+  #scoreDisplayDiv {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+
+  @media only screen and (max-width: 600px) {
+      text, p {
+      font-size: 1.25rem;
+    }
+    input[type=text], button {
+      width: 90%;
+    }
+    .popup-form {
+      width: 80%;
+      left: 10%;
+    }
+
+  }
+
+</style>
+<body>
+  <!--Div for the pop up login form-->
+  <div class="popup-form" id="popup">
+    <center>
+      <h1>BUG MASHER</h1>
+      <label id="label" for="username">Enter your username</label>
+      <br>
+      <input type="text" placeholder="Enter Username" name="username" id="usernameInput">
+      <br><br>
+      <!-- button to close popup used for user to login into masher game -->
+      <button id="buttonClose" onclick="closePopup()">Start</button>
+    </center>
+  </div>
+  <!-- Div for the game -->
+  <div id="game-div" >
+    <h1 align="center">Bug Masher</h1>
+    <!-- this div is for filling in username -->
+    <div id="loginName" align="center">Welcome </div>
+    <p align="center">Squash the bug as many times as possible</p>
+    <div id="scoreDisplayDiv">
+    <text id="ScoreText">Your Score:</text>
+    <text id="HighScoreText">High score:</text>
+    </div>
+    <br>
+    <br>
+    <br>
+    <center>
+    <img src="tick.jpg" onclick="score()">
+    <br>
+    <br>
+    <br>
+    <br>
+    <button id="buttonRestart"onclick="reload()">Reload</button>
+    </center>
+  </div>
+  <script>
+    //set up global variables: counter and username
+    let counter = 0;
+    let username = "";
+  
+    function closePopup() {
+      username = document.getElementById("usernameInput").value;
+      if (!username) {
+        alert("Please enter username");
+        return;
+      }
+      //if no username in localStorage
+      if(!localStorage.getItem(username)) {
+        localStorage.setItem(username, "0");
+      }
+        //localStorage.getItem(username) will get you the highScore
+        document.getElementById("HighScoreText").innerHTML = "High score: " + localStorage.getItem(username);
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("game-div").style.display = "block";
+        document.getElementById("usernameInput").value = "";
+        document.getElementById("loginName").innerHTML = "Welcome " + username.toUpperCase();
+        document.getElementById("loginName").style.color = "yellow";
+      }    
+
+    function score() {
+      //increase counter by 1
+      counter++;
+      //update the Score text with current count
+      document.getElementById("ScoreText").innerHTML = username + " Score: " + counter;
+      //get the username's high score from local storage
+      var userHighScore = localStorage.getItem(username);
+      //then check if counter passed the high score
+      if(counter > Number(userHighScore)) {
+      userHighScore = counter;
+        //update the High Score text on display screen with new high score
+        document.getElementById("HighScoreText").innerHTML = "New High score: " + userHighScore;
+        //update the high score in local storage
+        localStorage.setItem(username, userHighScore);
+      }
+    }
+
+    function reload() {
+      window.location.reload();
+    }
+
+  </script>  
+</body>
+</html>
